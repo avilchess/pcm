@@ -2147,7 +2147,7 @@ double getPP0ConsumedJoules(const CounterStateType & before, const CounterStateT
     PCM * m = PCM::getInstance();
     if(!m) return -1.;  
  
-    std::cout << std::endl << "Julios por unidad: " << m->getJoulesPerEnergyUnit() << " --- " << getPP0ConsumedEnergy(before,after)  << std::endl;
+    //std::cout << std::endl << "Julios por unidad: " << m->getJoulesPerEnergyUnit() << " --- " << getPP0ConsumedEnergy(before,after)  << std::endl;
     return double(getPP0ConsumedEnergy(before,after))*m->getJoulesPerEnergyUnit();
 }
 

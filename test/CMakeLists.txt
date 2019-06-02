@@ -5,10 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 # For MacOS 
 IF(APPLE)
 set(CMAKE_CXX_FLAGS "-lPcmMsr")
-ENDIF()
-
-IF(UNIX)
-set(CMAKE_CXX_FLAGS "lpcm")
+ELSE()
+set(CMAKE_CXX_FLAGS "-lpcm")
 ENDIF()
 
 add_executable(test main.cpp
