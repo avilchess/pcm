@@ -20,13 +20,15 @@ int main() {
     pcm->getAllCounterStates(sstate1, sktstate1, cstates1);
     float total = 0.0;
     // Do some computation
+    std::cout << "Starting computation!" << std::endl;
+
     for(int i=0; i<10000; i++){
-        std::cout << "iter: " << i << std::endl;
         for(int j=0; j<10000; j++){
             total = total + j*i;
         }
     }
-    std::cout << total << std::endl;
+    std::cout << "Ending computation!" << std::endl;
+    std::cout << "Total: " << total << std::endl;
 
     pcm->getAllCounterStates(sstate2, sktstate2, cstates2);
 
@@ -36,8 +38,6 @@ int main() {
          << getL2CacheHits(sktstate1[0], sktstate2[0]) << "\t" << getL2CacheMisses(sktstate1[0], sktstate2[0]) << "\t" << getL2CacheHitRatio(sktstate1[0], sktstate2[0]) <<"\t"
          << getL3CacheHits(sktstate1[0], sktstate2[0]) << "\t" << getL3CacheMisses(sktstate1[0], sktstate2[0]) << "\t" << getL3CacheHitRatio(sktstate1[0], sktstate2[0]) <<"\t"
          << getCyclesLostDueL3CacheMisses(sstate1, sstate2) << std::endl;
-
-    std::cout << "Hello, World!" << std::endl;
 
     return 0;
 }
