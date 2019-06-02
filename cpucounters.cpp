@@ -1376,6 +1376,23 @@ void PCM::initEnergyMonitoring()
                     std::make_shared<CounterWidthExtender>(
                         new CounterWidthExtender::MsrHandleCounter(MSR[socketRefCore[i]], MSR_PKG_ENERGY_STATUS), 32, 10000));
 
+        /*Included by Vilches*/
+        if(pp0_energy_status.empty())
+            for (i = 0; i < (int)num_sockets; ++i)
+                 energy_status.push_back(
+                    std::make_shared<CounterWidthExtender>(
+                        new CounterWidthExtender::MsrHandleCounter(MSR[socketRefCore[i]], MSR_PP0_ENERGY_STATUS), 32, 10000));
+
+                //pp0_energy_status.push_back(new CounterWidthExtender(new CounterWidthExtender::MsrHandleCounter(MSR[socketRefCore[i]],MSR_PP0_ENERGY_STATUS)) );
+
+        /*Included by Vilches*/
+        if(pp1_energy_status.empty())
+            for (i = 0; i < (int)num_sockets; ++i)
+                 energy_status.push_back(
+                    std::make_shared<CounterWidthExtender>(
+                        new CounterWidthExtender::MsrHandleCounter(MSR[socketRefCore[i]], MSR_PP1_ENERGY_STATUS), 32, 10000));
+                //pp1_energy_status.push_back(new CounterWidthExtender(new CounterWidthExtender::MsrHandleCounter(MSR[socketRefCore[i]],MSR_PP1_ENERGY_STATUS)) );
+
         if(dramEnergyMetricsAvailable() && dram_energy_status.empty())
             for (i = 0; i < (int)num_sockets; ++i)
                 dram_energy_status.push_back(
@@ -1909,6 +1926,18 @@ PCM::~PCM()
         destroyMSR();
         instance = NULL;
     }
+
+    /*Included by Vilches*/
+    // for (uint32 i = 0; i < pp0_energy_status.size(); ++i)
+    // {
+    //     delete  pp0_energy_status[i];
+    // }
+
+    /*Included by Vilches*/
+    // for (uint32 i = 0; i < pp1_energy_status.size(); ++i)
+    // {
+    //     delete  pp1_energy_status[i];
+    // }
 }
 
 bool PCM::good()
@@ -3899,6 +3928,14 @@ void PCM::readAndAggregateEnergyCounters(const uint32 socket, CounterStateType &
 {
     if(socket < (uint32)energy_status.size())
         result.PackageEnergyStatus += energy_status[socket]->read();
+
+       /*Included by Vilches*/
+    if(socket < (uint32)pp0_energy_status.size())
+        result.PP0EnergyStatus += pp0_energy_status[socket]->read();
+
+    /*Included by Vilches*/
+    if(socket < (uint32)pp1_energy_status.size())
+        result.PP1EnergyStatus += pp1_energy_status[socket]->read();
 
     if (socket < (uint32)dram_energy_status.size())
         result.DRAMEnergyStatus += dram_energy_status[socket]->read();

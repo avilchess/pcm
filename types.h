@@ -486,6 +486,17 @@ struct BecktonUncorePMUCNTCTLRegister
 #define PCM_INTEL_PCI_VENDOR_ID (0x8086)
 #define PCM_PCI_VENDOR_ID_OFFSET (0)
 
+/*PP0 RAPL Domain (Included By Vilches)*/
+#define MSR_PP0_POWER_LIMIT     (0x638)
+#define MSR_PP0_ENERGY_STATUS   (0x639)
+#define MSR_PP0_POLICY          (0x63A)
+#define MSR_PP0_PERF_STATUS     (0x63B)
+
+/*PP1 RAPL Domain (Included By Vilches)*/
+#define MSR_PP1_POWER_LIMIT     (0x640)
+#define MSR_PP1_ENERGY_STATUS   (0x641)
+#define MSR_PP1_POLICY          (0x642)
+
 // server PCICFG uncore counters
 
 #define JKTIVT_MC0_CH0_REGISTER_DEV_ADDR (16)

@@ -528,6 +528,8 @@ class PCM_API PCM
     std::vector<UncorePMU> uboxPMUs;
     double joulesPerEnergyUnit;
     std::vector<std::shared_ptr<CounterWidthExtender> > energy_status;
+    std::vector<std::shared_ptr<CounterWidthExtender> > pp0_energy_status;   // Antonio Vilches
+    std::vector<std::shared_ptr<CounterWidthExtender> > pp1_energy_status;   // Antonio Vilches
     std::vector<std::shared_ptr<CounterWidthExtender> > dram_energy_status;
     std::vector<std::vector<UncorePMU> > cboPMUs;
 
@@ -2086,6 +2088,30 @@ uint64 getConsumedEnergy(const CounterStateType & before, const CounterStateType
     return after.PackageEnergyStatus - before.PackageEnergyStatus;
 }
 
+/*!  \brief Returns energy consumed by cores of the processor, exclusing DRAM (measured in internal units), 
+    \param before CPU counter state before the experiment
+    \param after CPU counter state after the experiment
+    Included by Antonio Vilches
+*/
+
+template <class CounterStateType>
+uint64 getPP0ConsumedEnergy(const CounterStateType & before, const CounterStateType & after)
+{
+    return after.PP0EnergyStatus - before.PP0EnergyStatus;
+}
+
+/*!  \brief Returns energy consumed by device (emmbeddedGPU) of the processor, exclusing DRAM (measured in internal units), 
+    \param before CPU counter state before the experiment
+    \param after CPU counter state after the experiment
+    Included by Antonio Vilches
+*/
+
+template <class CounterStateType>
+uint64 getPP1ConsumedEnergy(const CounterStateType & before, const CounterStateType & after)
+{
+    return after.PP1EnergyStatus - before.PP1EnergyStatus;
+}
+
 /*!  \brief Returns energy consumed by DRAM (measured in internal units)
     \param before CPU counter state before the experiment
     \param after CPU counter state after the experiment
@@ -2107,6 +2133,37 @@ double getConsumedJoules(const CounterStateType & before, const CounterStateType
     if (!m) return -1.;
 
     return double(getConsumedEnergy(before, after)) * m->getJoulesPerEnergyUnit();
+}
+
+/*!  \brief Returns Joules consumed by cores of the processor (excluding DRAM), 
+    \param before CPU counter state before the experiment
+    \param after CPU counter state after the experiment
+    Included by Antonio Vilches
+*/
+
+template <class CounterStateType>
+double getPP0ConsumedJoules(const CounterStateType & before, const CounterStateType & after)
+{
+    PCM * m = PCM::getInstance();
+    if(!m) return -1.;  
+ 
+    std::cout << std::endl << "Julios por unidad: " << m->getJoulesPerEnergyUnit() << " --- " << getPP0ConsumedEnergy(before,after)  << std::endl;
+    return double(getPP0ConsumedEnergy(before,after))*m->getJoulesPerEnergyUnit();
+}
+
+/*!  \brief Returns Joules consumed by the graphics processor (excluding DRAM), 
+    \param before CPU counter state before the experiment
+    \param after CPU counter state after the experiment
+    Included by Antonio Vilches
+*/
+
+template <class CounterStateType>
+double getPP1ConsumedJoules(const CounterStateType & before, const CounterStateType & after)
+{
+    PCM * m = PCM::getInstance();
+    if(!m) return -1.;  
+ 
+    return double(getPP1ConsumedEnergy(before,after))*m->getJoulesPerEnergyUnit();
 }
 
 /*!  \brief Returns Joules consumed by DRAM
@@ -2163,6 +2220,10 @@ class UncoreCounterState
     friend uint64 getIORequestBytesFromMC(const CounterStateType & before, const CounterStateType & after);
     template <class CounterStateType>
     friend uint64 getConsumedEnergy(const CounterStateType & before, const CounterStateType & after);
+    template <class CounterStateType> //Included by Antonio Vilches
+    friend uint64 getPP0ConsumedEnergy(const CounterStateType & before, const CounterStateType & after);
+    template <class CounterStateType> //Included by Antonio Vilches
+    friend uint64 getPP1ConsumedEnergy(const CounterStateType & before, const CounterStateType & after);
     template <class CounterStateType>
     friend uint64 getDRAMConsumedEnergy(const CounterStateType & before, const CounterStateType & after);
     template <class CounterStateType>
@@ -2179,6 +2240,8 @@ protected:
     uint64 UncEDCNormalReads;
     uint64 UncMCIORequests;
     uint64 PackageEnergyStatus;
+    uint64 PP0EnergyStatus; //Included by Antonio Vilches
+    uint64 PP1EnergyStatus; //Included by Antonio Vilches
     uint64 DRAMEnergyStatus;
     uint64 TOROccupancyIAMiss;
     uint64 TORInsertsIAMiss;
@@ -2196,6 +2259,8 @@ public:
         UncEDCNormalReads(0),
         UncMCIORequests(0),
         PackageEnergyStatus(0),
+        PP0EnergyStatus(0),  //Included by Antonio Vilches
+        PP1EnergyStatus(0),  //Included by Antonio Vilches
         DRAMEnergyStatus(0),
         TOROccupancyIAMiss(0),
         TORInsertsIAMiss(0),
@@ -2215,6 +2280,8 @@ public:
         UncEDCNormalReads += o.UncEDCNormalReads;
         UncMCIORequests += o.UncMCIORequests;
         PackageEnergyStatus += o.PackageEnergyStatus;
+        PP0EnergyStatus += o.PP0EnergyStatus;   //Included by Antonio Vilches
+        PP1EnergyStatus += o.PP1EnergyStatus;   //Included by Antonio Vilches
         DRAMEnergyStatus += o.DRAMEnergyStatus;
         TOROccupancyIAMiss += o.TOROccupancyIAMiss;
         TORInsertsIAMiss += o.TORInsertsIAMiss;
