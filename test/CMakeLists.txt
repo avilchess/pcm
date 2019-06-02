@@ -12,5 +12,5 @@ add_executable(test main.cpp
         ../mmio.cpp
         ../utils.cpp
         )
-target_include_directories(scrimp PUBLIC "../")
+target_include_directories(test PUBLIC "../")
 
