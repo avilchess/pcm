@@ -2148,7 +2148,7 @@ double getPP0ConsumedJoules(const CounterStateType & before, const CounterStateT
     if(!m) return -1.;  
  
     //std::cout << std::endl << "Julios por unidad: " << m->getJoulesPerEnergyUnit() << " --- " << getPP0ConsumedEnergy(before,after)  << std::endl;
-    return double(getPP0ConsumedEnergy(before,after))*m->getJoulesPerEnergyUnit();
+    return double(getPP0ConsumedEnergy(before, after)) * m->getJoulesPerEnergyUnit();
 }
 
 /*!  \brief Returns Joules consumed by the graphics processor (excluding DRAM), 
@@ -2163,7 +2163,7 @@ double getPP1ConsumedJoules(const CounterStateType & before, const CounterStateT
     PCM * m = PCM::getInstance();
     if(!m) return -1.;  
  
-    return double(getPP1ConsumedEnergy(before,after))*m->getJoulesPerEnergyUnit();
+    return double(getPP1ConsumedEnergy(before, after)) * m->getJoulesPerEnergyUnit();
 }
 
 /*!  \brief Returns Joules consumed by DRAM

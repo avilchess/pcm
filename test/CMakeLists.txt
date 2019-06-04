@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.5.1)
 project(pcm_test)
 set(CMAKE_CXX_STANDARD 14)
 
@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 IF(APPLE)
 set(CMAKE_CXX_FLAGS "-lPcmMsr")
 ELSE()
-set(CMAKE_CXX_FLAGS "-lpcm")
+set(CMAKE_CXX_FLAGS "-lpcm -lpthreads")
 ENDIF()
 
 add_executable(test main.cpp
